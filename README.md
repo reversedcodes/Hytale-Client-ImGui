@@ -7,6 +7,22 @@ Hytale ImGui is a C++ DLL injection project that renders an ImGui overlay inside
 * **Hooking Library:** [funchook](https://github.com/kubo/funchook)
 * **Build System:** CMake
 
+### Build
+
+``` bash
+git clone https://github.com/reversedcodes/Hytale-ImGui-Dll.git
+cd Hytale-ImGui-Dll
+
+mkdir build
+cd build
+
+cmake ..
+cmake --build . --config Release
+```
+## Injection
+[Cheat Engine](https://www.cheatengine.org/)
+
+
 ## License
 This project is licensed under the [Apache License 2.0](LICENSE).  
 You are free to use, modify, and distribute this software under the terms of the license.
