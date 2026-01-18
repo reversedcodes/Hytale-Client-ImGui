@@ -57,7 +57,7 @@ public:
     {
         for (size_t i = 0; i < m_modules.size(); i++)
         {
-            if (name == m_modules[i]->Name())
+            if (name == m_modules[i]->GetName())
             {
                 auto out = std::move(m_modules[i]);
                 m_modules.erase(m_modules.begin() + i);
@@ -70,7 +70,7 @@ public:
     Module *GetModule(std::string_view name)
     {
         for (auto &m : m_modules)
-            if (name == m->Name())
+            if (name == m->GetName())
                 return m.get();
         return nullptr;
     }

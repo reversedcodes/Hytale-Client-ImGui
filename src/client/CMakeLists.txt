@@ -7,6 +7,7 @@ include(cmake/FetchFunchook.cmake)
 add_library(client SHARED
     Dllmain.cc
     Hooks.cc
+    Client.cc
 
     utils/Console.cc
     utils/Memory.cc
@@ -26,4 +27,5 @@ target_link_libraries(client PRIVATE
   gdi32
   imgui
 )
+
 target_include_directories(client PRIVATE ./)

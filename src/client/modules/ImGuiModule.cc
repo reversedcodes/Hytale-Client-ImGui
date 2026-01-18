@@ -5,7 +5,6 @@
 #include <imgui_impl_win32.h>
 #include <windows.h>
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 ImGuiModule g_ImGuiModule;
 
 void ImGuiModule::OnInitialize()
@@ -30,7 +29,7 @@ bool ImGuiModule::InitImGuiForCurrentContext(HDC hdc)
         return false;
 
     HGLRC ctx = wglGetCurrentContext();
-    
+
     if (!ctx)
         return false;
 
@@ -70,15 +69,15 @@ void ImGuiModule::OnSwapBuffers(HDC hdc)
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::Begin("Hello, ImGui!");
-    ImGui::Text("This is a sample ImGui window.");
+    ImGui::Begin("Hello");
+    ImGui::Text("Hello World!");
     ImGui::End();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 void ImGuiModule::OnWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     if (m_imguiInitialized)

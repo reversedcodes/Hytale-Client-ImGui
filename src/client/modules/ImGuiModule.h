@@ -5,27 +5,16 @@
 class ImGuiModule final : public Module
 {
 public:
+    const char* GetName() const override { return "ImGuiModule"; }
     void OnInitialize() override;
     void OnEnable() override;
     void OnDisable() override;
 
-    // called from hook
     void OnSwapBuffers(HDC hdc);
-
-    // called from hook
     void OnWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-    bool EnsureAttachedToWindowFromDC(HDC hdc);
-
-    WNDPROC GetOriginalWndProc() const
-    {
-        return m_oWndProc;
-    }
-    
-    HWND GetHwnd() const
-    {
-        return m_hWnd;
-    }
+    WNDPROC GetOriginalWndProc() const { return m_oWndProc; }
+    HWND GetHwnd() const { return m_hWnd;}
 
 private:
     bool InitImGuiForCurrentContext(HDC hdc);

@@ -1,5 +1,6 @@
 #include "Hooks.h"
 
+#include "Client.h"
 #include "utils/ProcessHelper.h"
 #include "utils/Memory.h"
 
@@ -9,9 +10,10 @@ void Hooks::Init()
 {
     auto mod = ProcessHelper::getModuleBaseLoad("opengl32.dll");
     auto target = ProcessHelper::getExport(mod, "wglSwapBuffers");
-    if (!target) return;
+    if (!target)
+        return;
 
-    g_Hooks.m_pWglSwapBuffersHook = std::make_unique<TFuncHook>(target, Hooks::hkwglSwapBuffers);
+    g_Hooks.m_pWglSwapBuffersHook = std::make_unique<TFuncHook>(target, (void *)Hooks::hkwglSwapBuffers);
 }
 
 void Hooks::Enable()
@@ -33,32 +35,31 @@ void Hooks::Restore()
     g_hwndInitialized = false;
 }
 
-LRESULT CALLBACK Hooks::WndProc(const HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK Hooks::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-
-    if(g_ImGuiModule.IsEnabled())
-        g_ImGuiModule.OnWndProc(hWnd, msg, wParam, lParam);
-
-    return CallWindowProc(oWndProc, hWnd, msg, wParam, lParam);
+    Client::GetInstance().OnWndProc(hWnd, msg, wParam, lParam);
+    return CallWindowProcW(oWndProc, hWnd, msg, wParam, lParam);
 }
 
 BOOL WINAPI Hooks::hkwglSwapBuffers(HDC hdc)
-{   
-    if(g_hwndInitialized == false) {
+{
+    if (!g_hwndInitialized)
+    {
         g_hWnd = WindowFromDC(hdc);
-        g_hwndInitialized = true;
+        if (g_hWnd)
+            g_hwndInitialized = true;
     }
 
-    if(g_hwndInitialized) {
-        if(oWndProc == nullptr) {
-            oWndProc = (WNDPROC)GetWindowLongPtrW(g_hWnd, GWLP_WNDPROC);
-            SetWindowLongPtrW(g_hWnd, GWLP_WNDPROC, (LONG_PTR)Hooks::WndProc);
-        }
+    if (g_hwndInitialized && !oWndProc)
+    {
+        SetLastError(0);
+        LONG_PTR prev = SetWindowLongPtrW(g_hWnd, GWLP_WNDPROC, (LONG_PTR)Hooks::WndProc);
+
+        if (prev != 0 || GetLastError() == 0)
+            oWndProc = (WNDPROC)prev;
     }
 
-    if (g_ImGuiModule.IsEnabled())
-        g_ImGuiModule.OnSwapBuffers(hdc);
+    Client::GetInstance().OnSwapBuffers(hdc);
 
-    return g_Hooks.m_pWglSwapBuffersHook->CallOriginal<BOOL, HDC>(hdc);
+    return g_Hooks.m_pWglSwapBuffersHook->OriginalAs<BOOL(WINAPI *)(HDC)>()(hdc);
 }
-

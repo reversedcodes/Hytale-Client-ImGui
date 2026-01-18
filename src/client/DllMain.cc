@@ -1,17 +1,9 @@
-#include "Hooks.h"
-#include "utils/Console.h"
-#include "utils/ProcessHelper.h"
-
+#include "Client.h"
 #include <iostream>
 
 static DWORD WINAPI init(LPVOID hModule)
 {
-    CreateConsole();
-    Hooks::Init();
-    Hooks::Enable();
-
-    std::cout << "Base Address: " << ProcessHelper::getExecutableBase() << std::endl;
-
+    Client::GetInstance().Initialize();
     return 0;
 }
 
@@ -24,7 +16,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID)
     }
     else if (reason == DLL_PROCESS_DETACH)
     {
-        Hooks::Restore();
+        Client::GetInstance().Shutdown();
     }
     return TRUE;
 }

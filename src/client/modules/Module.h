@@ -6,7 +6,7 @@ class Module {
 public:
     virtual ~Module() = default;
 
-    virtual const char* Name() const = 0;
+    virtual const char* GetName() const = 0;
     virtual void OnInitialize() {}
     virtual void OnEnable() {}
     virtual void OnDisable() {}
