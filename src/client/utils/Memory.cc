@@ -1,8 +1,9 @@
 #include "Memory.h"
 #include "ProcessHelper.h"
-
 #include <vector>
 #include <sstream>
+#include <string>
+#include <cstdint>  
 #include <Windows.h>
 
 // No test
