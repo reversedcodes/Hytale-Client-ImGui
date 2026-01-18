@@ -12,7 +12,7 @@ Hytale Client ImGui is a C++ DLL injection project that renders an ImGui overlay
 ### Build
 ``` bash
 git clone https://github.com/reversedcodes/Hytale-Client-ImGui.git
-cd Hytale-ImGui-Dll
+cd Hytale-Client-ImGui
 
 mkdir build
 cd build
